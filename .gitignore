@@ -14,3 +14,7 @@ frontend/.angular/
 # OS
 .DS_Store
 Thumbs.db
+
+# Docker Environment
+compose.env
+docker_data/

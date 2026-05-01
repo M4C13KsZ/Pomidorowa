@@ -1,0 +1,15 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: pomidorowa-db
+    env_file:
+      - compose.env
+    ports:
+      - "5434:5432"
+    volumes:
+      - ./docker_data/postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres -d pomidorowa-db" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
