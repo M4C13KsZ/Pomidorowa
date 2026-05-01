@@ -16,5 +16,6 @@ frontend/.angular/
 Thumbs.db
 
 # Docker Environment
-compose.env
+.env
 docker_data/
+
