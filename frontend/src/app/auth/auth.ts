@@ -4,6 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../core/services/auth.service';
 
+type Tab = 'login' | 'register';
+
 @Component({
   selector: 'app-auth',
   standalone: true,
@@ -11,12 +13,20 @@ import { AuthService } from '../core/services/auth.service';
   templateUrl: './auth.html',
 })
 export class AuthComponent {
+  activeTab = signal<Tab>('login');
   email = '';
   password = '';
   error = signal('');
   loading = signal(false);
 
   constructor(private authService: AuthService, private router: Router) {}
+
+  setTab(tab: Tab): void {
+    this.activeTab.set(tab);
+    this.error.set('');
+    this.email = '';
+    this.password = '';
+  }
 
   submit(): void {
     this.error.set('');
@@ -30,8 +40,11 @@ export class AuthComponent {
     }
 
     this.loading.set(true);
+    const action = this.activeTab() === 'login'
+      ? this.authService.login(this.email, this.password)
+      : this.authService.register(this.email, this.password);
 
-    this.authService.login(this.email, this.password).subscribe({
+    action.subscribe({
       next: () => this.router.navigate(['/dashboard']),
       error: (err) => {
         this.error.set(err.error?.error ?? 'Coś poszło nie tak.');
