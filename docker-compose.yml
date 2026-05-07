@@ -27,4 +27,12 @@ services:
       db:
         condition: service_healthy
     command: >
-      sh -c "npx prisma db push && npm run start:dev"
+      sh -c "npx prisma db push && npm run dev"
+
+  frontend:
+    build: ./frontend
+    container_name: pomidorowa-frontend
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend
