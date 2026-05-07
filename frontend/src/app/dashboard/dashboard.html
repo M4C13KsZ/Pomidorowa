@@ -1,0 +1,172 @@
+<div class="min-h-screen-safe w-full p-4 md:p-8 lg:p-12 flex flex-col gap-8 animate-fade-in">
+  
+  <!-- Top Navigation Bar -->
+  <header class="flex items-center justify-between">
+    <div class="flex items-center gap-4">
+      <div class="w-12 h-12 bento-card flex items-center justify-center text-2xl shadow-rose-900/10">
+        🍅
+      </div>
+      <div>
+        <h1 class="text-2xl font-display font-bold text-white tracking-tight">Pomidorowa</h1>
+
+      </div>
+    </div>
+
+    <div class="flex items-center gap-2 bento-card p-1.5 rounded-3xl bg-slate-900/20">
+      <button (click)="navigateToStats()" class="nav-item">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+      </button>
+      <div class="w-px h-6 bg-slate-800 mx-1"></div>
+      <button (click)="logout()" class="nav-item text-rose-500 hover:bg-rose-500/10 hover:text-rose-400">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Grid Layout -->
+  <main class="flex-1 grid grid-cols-1 md:grid-cols-4 lg:grid-cols-6 gap-6 md:gap-8 auto-rows-min">
+    
+    <!-- Timer Tile (L) -->
+    <section class="col-span-1 md:col-span-4 lg:col-span-4 row-span-2 bento-card p-8 md:p-12 flex flex-col items-center justify-center relative overflow-hidden group">
+      <!-- Minimalist Background Accent -->
+      <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-white/1 rounded-full blur-3xl pointer-events-none transition-all duration-1000"
+           [style.background]="timer.phase() === 'break' ? 'radial-gradient(circle, rgba(16, 185, 129, 0.05) 0%, transparent 60%)' : 'radial-gradient(circle, rgba(244, 63, 94, 0.05) 0%, transparent 60%)'"
+           [class.opacity-100]="timer.running()"></div>
+
+      <div class="relative z-10 flex flex-col items-center w-full">
+        <!-- Digital Timer Display -->
+        <div class="mb-8 text-center">
+          <span class="text-[10px] font-bold uppercase tracking-[0.4em] text-slate-500 mb-4 block" [class.text-brand-focus]="timer.phase() === 'work'" [class.text-brand-break]="timer.phase() === 'break'">
+            {{ timer.phase() === 'work' ? 'Sesja Skupienia' : timer.phase() === 'break' ? 'Czas na Przerwę' : 'System Gotowy' }}
+          </span>
+          <h2 class="text-[9rem] md:text-[12rem] font-display font-light text-white tracking-tighter leading-none tabular-nums select-none transition-all group-hover:scale-[1.02]">
+            {{ timer.display() }}
+          </h2>
+        </div>
+
+        <!-- Minimalist Line Progress -->
+        <div class="w-full max-w-md h-1.5 bg-slate-950 rounded-full overflow-hidden mb-12 border border-white/5">
+          <div class="h-full transition-all duration-1000 ease-linear rounded-full"
+               [style.width]="(timer.progress() * 100) + '%'"
+               [class.bg-brand-focus]="timer.phase() === 'work'"
+               [class.bg-brand-break]="timer.phase() === 'break'"
+               [class.shadow-[0_0_20px_rgba(244,63,94,0.5)]]="timer.phase() === 'work'"
+               [class.shadow-[0_0_20px_rgba(16,185,129,0.5)]]="timer.phase() === 'break'"></div>
+        </div>
+
+        <!-- Action Controls -->
+        <div class="flex items-center gap-4">
+          @if (timer.phase() === 'idle' && selectedTask()) {
+            <button (click)="selectAndStart(selectedTask()!)" class="btn-bento-primary px-12 py-5 text-lg group/btn active:scale-95">
+              Skup się teraz
+              <span class="inline-block transition-transform group-hover/btn:translate-x-1 ml-2">→</span>
+            </button>
+          } @else if (timer.running()) {
+            <button (click)="pause()" class="btn-bento-secondary px-10 py-5">Wstrzymaj</button>
+            <button (click)="stop()" class="w-16 h-16 bento-card flex items-center justify-center text-slate-400 hover:text-rose-500 hover:bg-rose-500/10 active:scale-90">
+              <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24"><path d="M6 6h12v12H6z"/></svg>
+            </button>
+          } @else if (!timer.running() && timer.phase() !== 'idle') {
+            <button (click)="resume()" class="btn-bento-primary px-10 py-5">Wznów</button>
+            <button (click)="stop()" class="w-16 h-16 bento-card flex items-center justify-center text-slate-400 hover:bg-white/5 active:scale-90">
+               <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24"><path d="M6 6h12v12H6z"/></svg>
+            </button>
+          } @else {
+            <p class="text-sm font-semibold text-slate-500 italic opacity-50">Wybierz zadanie poniżej, aby zacząć pracę</p>
+          }
+        </div>
+      </div>
+    </section>
+
+    <!-- Tasks Tile (R) -->
+    <aside class="col-span-1 md:col-span-2 lg:col-span-2 row-span-4 bento-card flex flex-col overflow-hidden">
+      <div class="p-8 border-b border-slate-800 flex items-center justify-between bg-slate-900/20">
+        <h3 class="font-display font-bold text-xl text-white">Lista Zadań</h3>
+        <span class="text-[10px] font-black px-2 py-1 rounded bg-slate-950 text-slate-400">{{ tasks().length }} POZYCJI</span>
+      </div>
+
+      <div class="p-6 bg-slate-950/30">
+        <form (ngSubmit)="addTask()" class="relative">
+          <input 
+            type="text" 
+            [(ngModel)]="newTaskName" 
+            name="newTask"
+            placeholder="Dodaj nowe zadanie..." 
+            class="input-bento w-full text-sm pr-12"
+            required>
+          <button type="submit" 
+            class="absolute right-2 top-2 bottom-2 w-10 bento-card flex items-center justify-center bg-white text-slate-950 hover:bg-slate-200 transition-colors">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+          </button>
+        </form>
+      </div>
+
+      <div class="flex-1 overflow-y-auto p-4 space-y-2 custom-scrollbar">
+        @for (task of tasks(); track task.id) {
+          <div 
+            class="group bento-card p-4 flex items-center gap-4 transition-all !rounded-2xl"
+            [class.!border-slate-600]="selectedTask()?.id === task.id"
+            [class.!bg-slate-800/40]="selectedTask()?.id === task.id"
+            [class.!border-transparent]="selectedTask()?.id !== task.id">
+            
+            <button (click)="selectedTask.set(task)" class="flex-1 min-w-0 text-left">
+              <span class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">ZADANIE #{{ task.id }}</span>
+              <p class="text-sm font-medium truncate transition-colors"
+                 [class.text-white]="selectedTask()?.id === task.id"
+                 [class.text-slate-400]="selectedTask()?.id !== task.id">
+                {{ task.name }}
+              </p>
+            </button>
+
+            <div class="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+              <button (click)="deleteTask(task)" class="p-2 bento-card !rounded-xl text-slate-600 hover:text-rose-500 hover:bg-rose-500/10 border-transparent">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+              </button>
+            </div>
+          </div>
+        }
+      </div>
+    </aside>
+
+    <!-- Status Tile (S) -->
+    <section class="col-span-1 md:col-span-2 lg:col-span-2 bento-card p-6 flex items-center gap-6 overflow-hidden">
+      <div class="w-16 h-16 rounded-3xl bg-slate-950 flex items-center justify-center text-2xl" [class.animate-pulse]="timer.running()">
+        {{ timer.running() ? '🔥' : '⏸️' }}
+      </div>
+      <div>
+        <h4 class="text-xs font-black uppercase tracking-[0.2em] text-slate-500 mb-1">Aktualne Zadanie</h4>
+        <p class="text-white font-bold truncate max-w-[150px] md:max-w-[200px]">
+          {{ selectedTask()?.name || 'Oczekiwanie...' }}
+        </p>
+      </div>
+    </section>
+
+    <!-- Stats Tile (XS) -->
+    <section class="col-span-1 md:col-span-2 lg:col-span-2 bento-card p-6 flex justify-between items-center group">
+      <div>
+        <h4 class="text-xs font-black uppercase tracking-[0.2em] text-slate-500 mb-1">Seria Sesji</h4>
+        <p class="text-3xl font-display font-light text-white">{{ stats()?.sessions?.length ?? 0 }} <span class="text-xs text-slate-600">JEDNOSTEK</span></p>
+      </div>
+      <div class="w-12 h-12 bento-card flex items-center justify-center text-slate-600 group-hover:text-emerald-400 transition-colors">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+      </div>
+    </section>
+
+  </main>
+
+
+</div>
+
+<!-- Bento Style Break Overlay -->
+<div *ngIf="showBreakPrompt()" class="fixed inset-0 z-50 flex items-center justify-center p-6 backdrop-blur-3xl bg-slate-950/60 animate-fade-in">
+  <div class="max-w-md w-full bento-card p-12 text-center shadow-[0_0_100px_rgba(0,0,0,0.5)]">
+    <div class="text-6xl mb-8 transition-transform animate-float">🍵</div>
+    <h2 class="font-display font-bold text-4xl text-white mb-4 tracking-tighter">Sesja Ukończona</h2>
+    <p class="text-slate-400 mb-12 text-sm leading-relaxed">Grulacje! Właśnie ukończyłeś blok głębokiego skupienia. Nauka sugeruje krótką przerwę dla resetu wydajności poznawczej.</p>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <button (click)="startBreak()" class="btn-bento-primary bg-brand-break text-slate-950 hover:bg-emerald-400">Zacznij Przerwę</button>
+      <button (click)="skipBreak()" class="btn-bento-secondary">Pomiń Odpoczynek</button>
+    </div>
+  </div>
+</div>
