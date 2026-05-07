@@ -70,6 +70,46 @@ export class DashboardComponent implements OnInit, OnDestroy {
     });
   }
 
+  addTask(): void {
+    const name = this.newTaskName.trim();
+    if (!name) return;
+    this.taskService.createTask(name).subscribe({
+      next: (task) => {
+        this.tasks.update(ts => [task, ...ts]);
+        this.newTaskName = '';
+      },
+    });
+  }
+
+  startEditTask(task: Task): void {
+    this.editingTask.set(task);
+    this.editingName = task.name;
+  }
+
+  saveEditTask(): void {
+    const task = this.editingTask();
+    if (!task || !this.editingName.trim()) return;
+    this.taskService.updateTask(task.id, this.editingName.trim()).subscribe({
+      next: (updated) => {
+        this.tasks.update(ts => ts.map(t => t.id === updated.id ? updated : t));
+        if (this.selectedTask()?.id === updated.id) this.selectedTask.set(updated);
+        this.editingTask.set(null);
+      },
+    });
+  }
+
+  deleteTask(task: Task): void {
+    this.taskService.deleteTask(task.id).subscribe({
+      next: () => {
+        this.tasks.update(ts => ts.filter(t => t.id !== task.id));
+        if (this.selectedTask()?.id === task.id) {
+          this.timer.stop();
+          this.selectedTask.set(null);
+        }
+      },
+    });
+  }
+
   selectAndStart(task: Task): void {
     this.selectedTask.set(task);
     this.showBreakPrompt.set(false);
