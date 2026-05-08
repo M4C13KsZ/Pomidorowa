@@ -1,0 +1,22 @@
+<div class="min-h-screen-safe w-full p-4 md:p-8 lg:p-12 flex flex-col gap-8 animate-fade-in">
+
+  <!-- Navigation Header -->
+  <header class="flex items-center justify-between">
+    <button (click)="goBack()" class="flex items-center gap-3 group">
+      <div
+        class="w-12 h-12 bento-card flex items-center justify-center text-slate-400 group-hover:text-white transition-all">
+        <svg class="w-6 h-6 transition-transform group-hover:-translate-x-1" fill="none" stroke="currentColor"
+          viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+        </svg>
+      </div>
+      <span class="font-display font-bold text-xl text-white">Wróć do Pulpitu</span>
+    </button>
+
+    <div class="hidden md:block text-right">
+      <h2 class="text-sm font-black uppercase tracking-[0.3em] text-slate-500">Dane historyczne</h2>
+
+    </div>
+  </header>
+
+</div>
