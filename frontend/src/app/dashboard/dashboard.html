@@ -27,56 +27,10 @@
   <main class="flex-1 grid grid-cols-1 md:grid-cols-4 lg:grid-cols-6 gap-6 md:gap-8 auto-rows-min">
     
     <!-- Timer Tile (L) -->
-    <section class="col-span-1 md:col-span-4 lg:col-span-4 row-span-2 bento-card p-8 md:p-12 flex flex-col items-center justify-center relative overflow-hidden group">
-      <!-- Minimalist Background Accent -->
-      <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-white/1 rounded-full blur-3xl pointer-events-none transition-all duration-1000"
-           [style.background]="timer.phase() === 'break' ? 'radial-gradient(circle, rgba(16, 185, 129, 0.05) 0%, transparent 60%)' : 'radial-gradient(circle, rgba(244, 63, 94, 0.05) 0%, transparent 60%)'"
-           [class.opacity-100]="timer.running()"></div>
-
-      <div class="relative z-10 flex flex-col items-center w-full">
-        <!-- Digital Timer Display -->
-        <div class="mb-8 text-center">
-          <span class="text-[10px] font-bold uppercase tracking-[0.4em] text-slate-500 mb-4 block" [class.text-brand-focus]="timer.phase() === 'work'" [class.text-brand-break]="timer.phase() === 'break'">
-            {{ timer.phase() === 'work' ? 'Sesja Skupienia' : timer.phase() === 'break' ? 'Czas na Przerwę' : 'System Gotowy' }}
-          </span>
-          <h2 class="text-[9rem] md:text-[12rem] font-display font-light text-white tracking-tighter leading-none tabular-nums select-none transition-all group-hover:scale-[1.02]">
-            {{ timer.display() }}
-          </h2>
-        </div>
-
-        <!-- Minimalist Line Progress -->
-        <div class="w-full max-w-md h-1.5 bg-slate-950 rounded-full overflow-hidden mb-12 border border-white/5">
-          <div class="h-full transition-all duration-1000 ease-linear rounded-full"
-               [style.width]="(timer.progress() * 100) + '%'"
-               [class.bg-brand-focus]="timer.phase() === 'work'"
-               [class.bg-brand-break]="timer.phase() === 'break'"
-               [class.shadow-[0_0_20px_rgba(244,63,94,0.5)]]="timer.phase() === 'work'"
-               [class.shadow-[0_0_20px_rgba(16,185,129,0.5)]]="timer.phase() === 'break'"></div>
-        </div>
-
-        <!-- Action Controls -->
-        <div class="flex items-center gap-4">
-          @if (timer.phase() === 'idle' && selectedTask()) {
-            <button (click)="selectAndStart(selectedTask()!)" class="btn-bento-primary px-12 py-5 text-lg group/btn active:scale-95">
-              Skup się teraz
-              <span class="inline-block transition-transform group-hover/btn:translate-x-1 ml-2">→</span>
-            </button>
-          } @else if (timer.running()) {
-            <button (click)="pause()" class="btn-bento-secondary px-10 py-5">Wstrzymaj</button>
-            <button (click)="stop()" class="w-16 h-16 bento-card flex items-center justify-center text-slate-400 hover:text-rose-500 hover:bg-rose-500/10 active:scale-90">
-              <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24"><path d="M6 6h12v12H6z"/></svg>
-            </button>
-          } @else if (!timer.running() && timer.phase() !== 'idle') {
-            <button (click)="resume()" class="btn-bento-primary px-10 py-5">Wznów</button>
-            <button (click)="stop()" class="w-16 h-16 bento-card flex items-center justify-center text-slate-400 hover:bg-white/5 active:scale-90">
-               <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24"><path d="M6 6h12v12H6z"/></svg>
-            </button>
-          } @else {
-            <p class="text-sm font-semibold text-slate-500 italic opacity-50">Wybierz zadanie poniżej, aby zacząć pracę</p>
-          }
-        </div>
-      </div>
-    </section>
+    <app-timer 
+      [selectedTask]="selectedTask()" 
+      class="col-span-1 md:col-span-4 lg:col-span-4 row-span-2">
+    </app-timer>
 
     <!-- Tasks Tile (R) -->
     <aside class="col-span-1 md:col-span-2 lg:col-span-2 row-span-4 bento-card flex flex-col overflow-hidden">

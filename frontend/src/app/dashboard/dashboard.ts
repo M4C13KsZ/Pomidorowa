@@ -7,6 +7,7 @@ import { AuthService } from '../core/services/auth.service';
 import { TaskService } from '../core/services/task.service';
 import { SessionService } from '../core/services/session.service';
 import { TimerService } from '../core/services/timer.service';
+import { TimerComponent } from './timer.component';
 import { Task, TodayStats } from '../core/models';
 
 // Component for the main productivity dashboard
@@ -14,7 +15,7 @@ import { Task, TodayStats } from '../core/models';
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TimerComponent],
   templateUrl: './dashboard.html',
 })
 export class DashboardComponent implements OnInit, OnDestroy {
@@ -108,20 +109,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
         }
       },
     });
-  }
-
-  selectAndStart(task: Task): void {
-    this.selectedTask.set(task);
-    this.showBreakPrompt.set(false);
-    this.timer.start('work');
-  }
-
-  pause(): void  { this.timer.pause(); }
-  resume(): void { this.timer.start(this.timer.phase() === 'break' ? 'break' : 'work'); }
-
-  stop(): void {
-    this.timer.stop();
-    this.showBreakPrompt.set(false);
   }
 
   startBreak(): void {
