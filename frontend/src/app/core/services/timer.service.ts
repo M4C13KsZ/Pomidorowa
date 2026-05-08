@@ -52,6 +52,11 @@ export class TimerService implements OnDestroy {
     this.sessionCompleted.set(false);
   }
 
+  /** Resets the completion signal after it has been handled */
+  consumeCompletion(): void {
+    this.sessionCompleted.set(false);
+  }
+
   startBreak(): void {
     this.start('break');
   }

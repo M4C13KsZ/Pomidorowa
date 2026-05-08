@@ -122,6 +122,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   private onSessionCompleted(): void {
+    this.timer.consumeCompletion();
     const task = this.selectedTask();
     this.sessionService.saveSession(task?.id ?? null, task?.name ?? 'Nieznane zadanie').subscribe({
       next: () => this.loadStats()
