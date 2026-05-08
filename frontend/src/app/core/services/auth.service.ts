@@ -15,8 +15,12 @@ export class AuthService {
     return of({ token: 'dummy-token' });
   }
 
+  getToken(): string | null {
+    return localStorage.getItem('token');
+  }
+
   isLoggedIn(): boolean {
-    return !!localStorage.getItem('token');
+    return !!this.getToken();
   }
 
   logout(): void {
