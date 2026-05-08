@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TimerService } from '../../core/services/timer.service';
-import { Task } from '../../core/models';
+import { TimerService } from '../core/services/timer.service';
+import { Task } from '../core/models';
 
 @Component({
   selector: 'app-timer',

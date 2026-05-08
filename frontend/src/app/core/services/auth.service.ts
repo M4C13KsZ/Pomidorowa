@@ -14,4 +14,12 @@ export class AuthService {
     console.log('Register attempt', email);
     return of({ token: 'dummy-token' });
   }
+
+  isLoggedIn(): boolean {
+    return !!localStorage.getItem('token');
+  }
+
+  logout(): void {
+    localStorage.removeItem('token');
+  }
 }

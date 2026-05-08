@@ -6,23 +6,23 @@ import { Task } from '../models';
 
 @Injectable({ providedIn: 'root' })
 export class TaskService {
-    private readonly API = '/api/tasks';
+  private readonly API = '/api/tasks';
 
-    constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) { }
 
-    getTasks(): Observable<Task[]> {
-        return this.http.get<Task[]>(this.API);
-    }
+  getTasks(): Observable<Task[]> {
+    return this.http.get<Task[]>(this.API);
+  }
 
-    createTask(name: string): Observable<Task> {
-        return this.http.post<Task>(this.API, { name });
-    }
+  createTask(name: string): Observable<Task> {
+    return this.http.post<Task>(this.API, { name });
+  }
 
-    updateTask(id: number, name: string): Observable<Task> {
-        return this.http.put<Task>(`${this.API}/${id}`, { name });
-    }
+  updateTask(id: number, name: string): Observable<Task> {
+    return this.http.put<Task>(`${this.API}/${id}`, { name });
+  }
 
-    deleteTask(id: number): Observable<void> {
-        return this.http.delete<void>(`${this.API}/${id}`);
-    }
+  deleteTask(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.API}/${id}`);
+  }
 }
