@@ -19,4 +19,93 @@
     </div>
   </header>
 
+  <!-- Stats Grid -->
+  <main class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+
+    <!-- Time Consumed -->
+    <div class="bento-card p-10 flex flex-col justify-between group">
+      <div>
+        <span
+          class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500 block mb-6 px-3 py-1 bg-slate-950/50 rounded-full w-fit">Dane
+          Czasowe</span>
+        <h3 class="text-base font-bold text-slate-400 mb-2">Całkowity Czas Skupienia</h3>
+        <p
+          class="text-6xl font-display font-light text-white tracking-tighter group-hover:scale-[1.05] transition-transform origin-left">
+          {{ totalTimeLabel }}</p>
+      </div>
+      <div class="mt-8 h-1 w-full bg-slate-950 rounded-full overflow-hidden">
+        <div class="h-full bg-brand-focus w-2/3 shadow-[0_0_15px_rgba(244,63,94,0.4)]"></div>
+      </div>
+    </div>
+
+    <!-- Units Completed -->
+    <div class="bento-card p-10 flex flex-col justify-between group">
+      <div>
+        <span
+          class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500 block mb-6 px-3 py-1 bg-slate-950/50 rounded-full w-fit">Statystyki
+          Sesji</span>
+        <h3 class="text-base font-bold text-slate-400 mb-2">Ukończone Sesje</h3>
+        <p class="text-7xl font-display font-light text-white tracking-tighter">{{ stats()?.sessions?.length ?? 0 }}</p>
+      </div>
+      <div class="mt-8 flex gap-2">
+        @for (i of [1,2,3,4,5,6]; track i) {
+        <div class="h-2 flex-1 rounded-full" [class.bg-brand-break]="i <= (stats()?.sessions?.length ?? 0)"
+          [class.bg-slate-950]="i > (stats()?.sessions?.length ?? 0)"></div>
+        }
+      </div>
+    </div>
+
+
+
+    <!-- History Table (Full Width) -->
+    <section class="col-span-1 md:col-span-2 lg:col-span-3 bento-card overflow-hidden">
+      <div class="px-10 py-8 border-b border-slate-800 bg-slate-900/20 flex items-center justify-between">
+        <h3 class="font-display font-bold text-2xl text-white">Rejestr Sesji</h3>
+
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-left">
+          <thead>
+            <tr class="bg-slate-950/30">
+              <th class="px-10 py-5 text-[10px] font-black uppercase tracking-widest text-slate-500">Operacja / Zadanie
+              </th>
+              <th class="px-10 py-5 text-[10px] font-black uppercase tracking-widest text-slate-500">Znacznik Czasu</th>
+              <th class="px-10 py-5 text-[10px] font-black uppercase tracking-widest text-slate-500 text-right">Czas
+                Trwania</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-800/50">
+            @for (session of stats()?.sessions; track session.id) {
+            <tr class="hover:bg-white/[0.02] transition-colors group">
+              <td class="px-10 py-6">
+                <div class="flex items-center gap-4">
+                  <div class="w-2 h-6 rounded-full bg-brand-focus shadow-[0_0_10px_rgba(244,63,94,0.3)]"></div>
+                  <span class="text-sm font-bold text-white uppercase tracking-tight">{{ session.taskName }}</span>
+                </div>
+              </td>
+              <td class="px-10 py-6 text-sm text-slate-500 font-mono">{{ formatTime(session.completedAt) }}</td>
+              <td class="px-10 py-6 text-right">
+                <span
+                  class="text-[10px] font-black px-3 py-1.5 rounded-lg bg-slate-950 text-emerald-500 border border-emerald-500/20">
+                  {{ formatDuration(session.durationSeconds) }}
+                </span>
+              </td>
+            </tr>
+            } @empty {
+            <tr>
+              <td colspan="3" class="px-10 py-24 text-center">
+                <p class="text-slate-600 italic text-sm mb-4">Brak wpisów w rejestrze na dziś.</p>
+                <button (click)="goBack()"
+                  class="text-[10px] font-black uppercase tracking-widest text-brand-focus hover:underline">Rozpocznij
+                </button>
+              </td>
+            </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
 </div>
