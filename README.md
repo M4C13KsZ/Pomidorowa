@@ -56,6 +56,74 @@ Aplikacja Pomidorowa dla studentów i programistów, zaprojektowana w nowoczesny
 | POST   | `/api/sessions`        | Zapisz sesję (pełne 25 min)     | ✓    |
 | GET    | `/api/sessions/today`  | Statystyki z dzisiaj            | ✓    |
 
+## Authentication API
+
+### Endpoints
+
+#### `POST /api/auth/register`
+Rejestracja nowego użytkownika.
+
+**Funkcje:**
+- walidacja emaila i hasła,
+- sprawdzanie duplikatów użytkowników,
+- hashowanie hasła (`bcrypt`),
+- generowanie tokenu JWT.
+
+#### `POST /api/auth/login	`
+Logowanie użytkownika.
+
+**Funkcje:**
+- weryfikacja danych logowania,
+- porównanie hasła z hashem,
+- generowanie tokenu JWT,
+- zwracanie danych użytkownika.
+
+---
+
+## Główne cechy
+
+- Express + TypeScript
+- Prisma ORM
+- JWT Authentication
+- Hashowanie haseł (`bcryptjs`)
+- Obsługa błędów HTTP
+- Walidacja danych wejściowych
+- Bezpieczne przechowywanie haseł
+
+## Sessions API
+
+#### `POST api/sessions`
+Zapisywanie ukończonej sesji Pomodoro.
+
+**Funkcje:**
+- wymaga autoryzacji JWT,
+- zapisuje tylko pełne sesje 25 minut (`1500s`),
+- walidacja nazwy zadania,
+- zapis sesji użytkownika w bazie danych.
+
+---
+
+#### `GET api/sessions/today`
+Pobieranie dzisiejszych sesji użytkownika.
+
+**Funkcje:**
+- wymaga autoryzacji JWT,
+- pobiera sesje z bieżącego dnia,
+- oblicza łączny czas pracy,
+- zwraca liczbę ukończonych Pomodoro,
+- generuje podsumowanie według zadań.
+
+---
+
+## Główne cechy
+
+- JWT Authentication Middleware
+- Prisma ORM
+- Statystyki produktywności
+- Obsługa sesji Pomodoro
+- Walidacja danych wejściowych
+- Obsługa błędów HTTP
+
 ## Schemat bazy danych
 
 ```
