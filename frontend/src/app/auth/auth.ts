@@ -47,7 +47,11 @@ export class AuthComponent {
     action.subscribe({
       next: () => this.router.navigate(['/dashboard']),
       error: (err) => {
-        this.error.set(err.error?.error ?? 'Coś poszło nie tak.');
+        if (err.status === 401) {
+          this.error.set('Nieprawidłowy e-mail lub hasło.');
+        } else {
+          this.error.set(err.error?.error ?? 'Coś poszło nie tak.');
+        }
         this.loading.set(false);
       },
     });
