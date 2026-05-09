@@ -2,73 +2,64 @@
 
 Aplikacja Pomidorowa dla studentów i programistów, zaprojektowana w nowoczesnym stylu Bento Grid. Pozwala zarządzać zadaniami, uruchamiać 25-minutowe sesje fokusowe i śledzić dzienny postęp pracy w minimalistycznym, wysokokontrastowym interfejsie.
 
-## Funkcje
+## Status Projektu
 
-- Rejestracja i logowanie (JWT)
-- Dodawanie, edycja i usuwanie zadań
-- Timer Pomodoro — 25 min pracy / 5 min przerwy z sygnałem dźwiękowym
-- Automatyczny zapis ukończonych sesji do bazy danych
-- Dzienny dashboard ze statystykami (łączny czas, liczba pomidorów per zadanie)
+- [x] Konfiguracja bazy danych (PostgreSQL + Prisma)
+- [x] Backend API (Auth, Tasks, Sessions)
+- [x] Frontend (Angular + Tailwind v4 + Bento Grid)
+- [x] Pełna konteneryzacja (Docker + Docker Compose)
+- [x] Obsługa błędów autoryzacji (401) i walidacja formularzy
 
-## Stack
+## Stack Technologiczny
 
 | Warstwa     | Technologia                     |
 |-------------|---------------------------------|
-| Frontend    | Angular 21, Tailwind CSS v4     |
-| UI Style    | Bento Grid (OLED Dark Mode)     |
-| Backend     | Node.js, Express.js, TypeScript |
-| Baza danych | PostgreSQL, Prisma ORM          |
-| Auth        | JWT, bcrypt                     |
+| **Frontend**| Angular 21, Signals, Tailwind 4 |
+| **Backend** | Node.js, Express, TypeScript    |
+| **Baza**    | PostgreSQL, Prisma ORM          |
+| **DevOps**  | Docker, Docker Compose, Nginx   |
 
-## Proponowana struktura projektu
+## Szybki Start (Docker)
 
-```
-pomodoro/
-├── backend/
-│   ├── prisma/           # Schema bazy danych
-│   └── src/
-│       ├── routes/       # auth.ts, tasks.ts, sessions.ts
-│       └── middleware/   # auth.ts (weryfikacja JWT)
-└── frontend/
-    └── src/app/
-        ├── auth/         # Strona logowania i rejestracji
-        ├── dashboard/    # Timer + lista zadań
-        ├── stats/        # Statystyki dnia
-        └── core/         # Serwisy, modele, interceptory
-```
+1. Skonfiguruj środowisko:
+   ```bash
+   cp .env-example .env
+   ```
+2. Uruchom cały stos:
+   ```bash
+   docker compose up --build -d
+   ```
+   Aplikacja będzie dostępna pod adresem: `http://localhost:8080`
 
-## Uruchomienie
+## Rozwój Lokalny (bez Dockera)
 
-### Docker (Najprostsza metoda)
-Skopiuj i uzupełnij zmienne środowiskowe.
-```bash
-cp .env-example .env
-```
+### Backend
+1. `cd backend`
+2. `npm install`
+3. `npx prisma db push`
+4. `npm run dev`
 
-Uruchomienie. Zaleca się używanie flagi **--build**, aby obrazy zawsze zawierały najnowsze zmiany.
-```bash
-docker compose up --build -d
-```
+### Frontend
+1. `cd frontend`
+2. `npm install`
+3. `npm start` (dostępny pod `http://localhost:4200`)
 
+---
 
-## Proponowane API
+## API Endpoints
 
-| Metoda | Endpoint               | Opis                           | Auth |
-|--------|------------------------|--------------------------------|------|
-| POST   | /api/auth/register     | Rejestracja                    | —    |
-| POST   | /api/auth/login        | Logowanie, zwraca JWT          | —    |
-| GET    | /api/tasks             | Lista zadań użytkownika        | ✓    |
-| POST   | /api/tasks             | Dodaj zadanie                  | ✓    |
-| PUT    | /api/tasks/:id         | Edytuj zadanie                 | ✓    |
-| DELETE | /api/tasks/:id         | Usuń zadanie                   | ✓    |
-| POST   | /api/sessions          | Zapisz sesję (tylko pełne 25min) | ✓  |
-| GET    | /api/sessions/today    | Statystyki z dzisiaj           | ✓    |
+| Metoda | Endpoint               | Opis                            | Auth |
+|--------|------------------------|---------------------------------|------|
+| POST   | `/api/auth/register`   | Rejestracja                     | —    |
+| POST   | `/api/auth/login`      | Logowanie (zwraca JWT)          | —    |
+| GET    | `/api/tasks`           | Lista zadań użytkownika         | ✓    |
+| POST   | `/api/sessions`        | Zapisz sesję (pełne 25 min)     | ✓    |
+| GET    | `/api/sessions/today`  | Statystyki z dzisiaj            | ✓    |
 
 ## Schemat bazy danych
 
 ```
-users    — id, email, password_hash, created_at
-tasks    — id, user_id, name, is_active, created_at
-sessions — id, user_id, task_id, task_name, duration_seconds, completed_at
+users    — id, email, passwordHash, createdAt
+tasks    — id, userId, name, isActive, createdAt
+sessions — id, userId, taskId, taskName, durationSeconds, completedAt
 ```
-
