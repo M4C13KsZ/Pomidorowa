@@ -30,7 +30,8 @@ export class TimerService implements OnDestroy {
 
   start(phase: TimerPhase = 'work'): void {
     this.sessionCompleted.set(false);
-    if (this.phase() !== phase) {
+    // Reset timer if we switch phases OR if the timer has reached zero
+    if (this.phase() !== phase || this.remaining() === 0) {
       this.remaining.set(phase === 'work' ? WORK_SECONDS : BREAK_SECONDS);
       this.phase.set(phase);
     }
