@@ -29,7 +29,7 @@ services:
       db:
         condition: service_healthy
     command: >
-      sh -c "npx prisma db push && npm run dev"
+      sh -c "until npx prisma db push; do echo 'Database not ready yet, retrying in 2 seconds...'; sleep 2; done && npm run start"
 
   frontend:
     build: ./frontend
