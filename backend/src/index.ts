@@ -3,7 +3,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import authRoutes from './routes/auth';
 import tasksRoutes from './routes/tasks';
-//import sessionsRoutes from './routes/sessions';
+import sessionsRoutes from './routes/sessions';
 //import { errorHandler } from './middleware/errorHandler';
 
 dotenv.config();
@@ -16,7 +16,7 @@ app.use(express.json());
 
 app.use('/api/auth', authRoutes);
 app.use('/api/tasks', tasksRoutes);
-//app.use('/api/sessions', sessionsRoutes);
+app.use('/api/sessions', sessionsRoutes);
 
 app.get('/api/health', (_req, res) => res.json({ status: 'ok' }));
 
