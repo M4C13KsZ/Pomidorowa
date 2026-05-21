@@ -7,9 +7,11 @@ services:
     ports:
       - "5434:5432"
     volumes:
-      - ./docker_data/postgres:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
+      - ./db-init.sh:/usr/local/bin/db-init.sh
+    entrypoint: ["sh", "/usr/local/bin/db-init.sh"]
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U postgres -d ${POSTGRES_DB}" ]
+      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}" ]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -36,3 +38,6 @@ services:
       - "8080:80"
     depends_on:
       - backend
+
+volumes:
+  postgres_data:
